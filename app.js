@@ -2,7 +2,7 @@ require("./configs/db.js")
 
 const express = require('express');
 const mongoose = require('mongoose');
-const feedRoutes = require('./routes/feed');
+const feedRoutes = require('./routes/test');
 const histRoutes = require('./routes/histRoute');
 const procRoutes = require('./routes/procsRoute')
 

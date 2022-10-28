@@ -2,11 +2,11 @@ const procInscri = require('../models/procIns')
 
 exports.getProcs = (req, res, next) => {
   // return array of existing posts
-  procInscri.find().then(foundProcs => {
+  procInscri.find().select('-_id -__v').then(foundProcs => {
     console.log("OPERATION === GET SUCCESSFULLY");
     res.json({
       message: "All procs",
-      hists: foundProcs
+      process: foundProcs
     });
   }).catch(err => console.log('err', err));;
 }
@@ -29,9 +29,10 @@ exports.createProc = (req, res, next) => {
   hist
   .save()
   .then(procSaved => {
+    const {__v, _id, ...procSavedRest } =  procSaved._doc;
     res.status(201).json({
       message: 'proc created successfully!',
-      procs: procSaved
+      procs: procSavedRest
     });
     console.log("OPERATION === POST SUCCESSFULLY");
   })
@@ -41,41 +42,57 @@ exports.createProc = (req, res, next) => {
 
 exports.getById = (req, res) => {
   let id = req.params.id; // get the name of tea to delete
-  procInscri.findById(id).then(foundProc => {
-    console.log("OPERATION === GET SUCCESSFULLY");
-    res.json({
-      message: "procIns found",
-      procs: foundProc
-    });
-  }).catch(err => console.log('err', err));;
+  procInscri.findOne({idStudent: id}, function(err, foundProc){
+    if (err){
+      console.log('err', err);
+    }
+    else{
+      console.log("OPERATION === GET SUCCESSFULLY");
+      res.json({
+        message: "procIns found",
+        procs: foundProc
+      });
+    }
+  }).select('-_id -__v');
 };
 
 //DELETE 1 
 exports.deleteById = (req, res) => {
   let id = req.params.id; // get the name of tea to delete
-  procInscri.findByIdAndDelete(id, (err) => {
-  //if there's nothing to delete return a message
-   if (err) return res.json(`Something went wrong, please try again. ${err}`);
-  //else, return the success message
-  else{
-    console.log("OPERATION === DELETE SUCCESSFULLY");
-    return res.json({message: "procIns deleted."});
-  } 
-  });
+
+  procInscri.findOneAndDelete({idStudent: id}, function(err, foundProc){
+    if (err){
+      console.log('err', err);
+    }
+    else if(foundProc !== null){
+      console.log("OPERATION === DELETE SUCCESSFULLY");
+      res.json({
+        message: "procIns and deleted",
+        procs: foundProc
+      });
+    }
+    else{
+      console.log("Not found");
+      res.status(500).send(err);
+    }
+  }).select('-_id -__v');
 };
 
 exports.updateById = (req, res) => {
   let id = req.params.id;
 
-  procInscri.findByIdAndUpdate(id, 
+  procInscri.findOneAndUpdate({idStudent: id}, 
     req.body, { new:true }, function(err, data) {
       if(err){
           console.log(err);
           res.status(500).send(err);
       }
-      else{
+      else if(data !== null){
           res.status(200).json(data);
           console.log("OPERATION === UPDATE SUCCESSFULLY");
+      }else{
+        console.log("Not found");
+        res.status(500).send(err);
       }
-  });  
+  }).select('-_id -__v');  
 };

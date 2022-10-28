@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 // create a new post schema
 const procInsSchema = new Schema({
   idStudent: {
-    type: mongoose.ObjectId,
+    type: String,
     required: true
   },
   fechaIns: {

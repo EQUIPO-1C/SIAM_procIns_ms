@@ -43,7 +43,7 @@ exports.getById = (req, res) => {
       message: "Hist found",
       hists: foundHists
     });
-  }).catch(err => console.log('err', err));;
+  }).catch(err => console.log('err', err));
 };
 
 //DELETE 1 
