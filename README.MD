@@ -20,7 +20,7 @@ Build your image in the root directory of the project
 
 Run the container with the next template
 
-	sudo docker run -p 3001:3001 -e DB_USER=<THE DATABASE USER> -e DB_PSWD=<THE DATABASE PASSWORD> --name procins_ms procins_devimg
+	sudo docker run -p 3001:3001 -d -e DB_USER=<THE DATABASE USER> -e DB_PSWD=<THE DATABASE PASSWORD> --name procins_ms procins_devimg
 
 ## Routes
 
